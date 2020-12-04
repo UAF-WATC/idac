@@ -1,0 +1,94 @@
+#############################
+## ---- Join Features ---- ##
+#############################
+
+import infid as inf
+import numpy as np
+import pandas as pd
+import pickle
+
+
+############
+## INPUTS ##
+############
+
+
+#####################
+### FIND FEATURES ###
+#####################
+
+synth_feature_path=project_dir+'results/training_results/features/synth_features.dat'
+rand_feature_path=project_dir+'results/training_results/features/rand_features.dat'
+
+synth_features = np.loadtxt(synth_feature_path)
+rand_features = np.loadtxt(rand_feature_path)
+
+
+def join_features(features)
+
+## create an array of labels
+rand_labels = np.zeros((synth_features.shape[0],1))
+synth_labels = np.zeros((synth_features.shape[0],1)) + 1 
+
+## add labels to the features
+synth_features_labels = np.concatenate([synth_features, synth_labels],axis=1)
+rand_features_labels = np.concatenate([rand_features, rand_labels],axis=1)
+
+## join all features
+labeled_features = np.concatenate([synth_features_labels, rand_features_labels], axis=0)
+
+## convert to a pandas dataframe
+labeled_features_df = pd.DataFrame(labeled_features)
+
+## define some column names
+col_names = ['feature_' + str(i) for i in np.arange(labeled_features.shape[1])]
+
+## change the last column name to category_id
+col_names[-1] = 'category_id'
+
+## add the column names to the pandas dataframe
+labeled_features_df.columns = col_names
+
+##############
+### SAVING ###
+##############
+
+save_path = project_dir + 'results/training_results/features/all_features.pickle'
+labeled_features_df.to_pickle(save_path)
+
+
+#######################
+## ---- Run ANN ---- ##
+#######################
+
+model_results = inf.train_vanilla_ann(labeled_features_df, num_epochs=100)
+
+model = model_results[0]
+scaling_factors = model_results[1]
+model_history = model_results[2]
+
+
+########################
+## SAVE THE ANN MODEL ##
+########################
+
+## saving dir
+save_dir = project_dir+'/results/nn_models/'
+
+## scaling factors and model file name
+scaling_factors_file = 'scaling_factors.pickle'
+model_file = 'vanilla_model'
+
+## save the scaling factors in the data
+with open(save_dir + scaling_factors_file,'w+b') as handle:
+    pickle.dump(scaling_factors, handle)
+
+# save model and architecture to single file
+model.save(save_dir + model_file)
+
+##test = model.predict(rand_features)
+
+
+
+
+
