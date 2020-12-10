@@ -44,6 +44,22 @@ For more information on how to use `./configure` see the [NCPAprop manual](https
 ### Python Dependencies and Conda Environment
 IDAC requires several python modules, which are listed below.  The easiest way to install these dependencies to build the environment from the idac_environment.yml file in the root directory in the idac repository.  
 
+To build the environment from the a .yml file, make sure you have [conda installed](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), then from the idac_linux_environment.yml file:
+
+1.  Open a terminal and `cd` into the directory where the idac repo is downloaded.  
+2.  build the environment with: 
+`conda env create -f idac_linux_environment.yml`
+3.  After building the environment, be sure to activate it with: 
+`conda activate idac`
+
+### Building environment manually 
+If you are running a different operating system, or you prefer to build the environment manually: 
+
+1.  Create an environment with the 'correct' version of python
+`conda create --name idac python=3.5 `
+2.  Install obspy with:
+`conda install obspy`
+
 
 
 
