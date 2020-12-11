@@ -44,7 +44,7 @@ For more information on how to use `./configure` see the [NCPAprop manual](https
 ### Downloading IDAC
 Idac is a python module, meaning it can (and should) be imported directly to a python environment (e.g. `import idac as ida`).  
 
-First navigate to the [IDAC repository](https://github.com/UAF-WATC/idac) and download the source code.  There are numerous ways to do this, the easiest being to click on the green "code" button -> 'Download Zip'.  Unzip, the module in an appropriate directory.  For example, "python_modules" or "github_packages", if you have other python/github projects.  We do not recommend unpacking to your "Desktop" or other similar temporary locations. 
+First navigate to the [IDAC repository](https://github.com/UAF-WATC/idac) and download the source code.  There are numerous ways to do this, the easiest being to click on the green "code" button > 'Download Zip'.  Then, unzip the module in an appropriate directory.  For example, "python_modules" or "github_packages" are good directory names if you have other python/github projects.  We do not recommend unpacking to your "Desktop" or other similar temporary locations. 
 
 Before installing IDAC, we must ensure the environment is set up correctly.  
 
@@ -59,7 +59,7 @@ To build the environment from a .yml file, make sure you have [conda installed](
 3.  After building the environment, be sure to activate it with: 
 `conda activate idac`
 
-### Building environment manually 
+#### Building environment manually 
 If you are running a different operating system, or you prefer to build the environment manually: 
 
 1.  Create an environment with the 'correct' version of python
@@ -77,7 +77,33 @@ Then install the module with pip:
 
 `pip install /path/to/idac/directory`
 
+# Using IDAC
 
+The following tutorial walks you through a simple case 'start to finish' workflow, which highlights the functionality of IDAC.  WARNING, IDAC functions typically write files to your local disk.  If care isn't taken, IDAC can write many GBs of data and fill up your disk space. 
+
+## Infrasound Data Augmentation
+
+### Generating Source Time Functions 
+
+
+### Generating Atmospheres 
+
+
+### Propagating Source Time Functions 
+
+#### Building dispersion curves 
+
+#### Propagating waveforms 
+
+### Adding noise to waveform 
+
+## Infrasound Classification
+
+### Generating features 
+
+### Training Machine Learning Model
+
+### Classifying Data
 
 
 
