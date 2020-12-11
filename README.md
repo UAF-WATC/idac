@@ -13,17 +13,21 @@ IDAC depends on a number of softwares and codes.  Testing is currently focusing 
 
 ### AVOG2S 
 
-The software [AVOG2S](https://github.com/usgs/volcano-avog2s) generates atmospheres using climatological and reanalysis models.  AVOG2S can be installed easily on Linux and Mac Os via homebrew.  
+The software [AVOG2S](https://github.com/usgs/volcano-avog2s) generates atmospheres using climatological and reanalysis models.  AVOG2S can be installed easily on Linux and Mac Os via git and homebrew.
 
-1.  install homebrew by typing (only needed once, if not already installed): 
+1.  First install git (only needed once, if not already installed):
+
+`sudo apt-get install git`
+
+2.  install homebrew by typing (only needed once, if not already installed): 
 
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 
-2.  tap the [Alaskan Volcano Observatories's (AVO) repository](https://github.com/ibrewster/homebrew-avo) (only needed once)
+3.  tap the [Alaskan Volcano Observatories's (AVO) repository](https://github.com/ibrewster/homebrew-avo) (only needed once)
 
 `brew tap ibrewster/avo`
 
-3.  install the AVOG2S formula using homebrew 
+4.  install the AVOG2S formula using homebrew 
 
 `brew install avog2s`
 
