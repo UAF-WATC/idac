@@ -33,7 +33,7 @@ NCPAProp is used to propagate source time functions (e.g. blast waves) through t
 To install NCPAProp: 
 
 1.  Download the NCPAProp software from its github repo: [NCPAprop](https://github.com/chetzer-ncpa/ncpaprop)
-2.  Open a terminal and `cd` into the directory where the code was downloaded and run `./configure with appropriate parameters`. For example, to download and install PETSc and SLEPc locally to the ncpaprop installation:
+2.  Open a terminal and `cd` into the directory where the code was downloaded and run `./configure` with appropriate parameters. We recommend the following parameters, which install required PETSc and SLEPc libraries locally within the ncpaprop installation:
 
 `./configure --with-localpetsc --enable-autodependencies`
 
@@ -41,10 +41,17 @@ For more information on how to use `./configure` see the [NCPAprop manual](https
 
 3.  Run `make`
 
-### Python Dependencies and Conda Environment
-IDAC requires several python modules, which are listed below.  The easiest way to install these dependencies to build the environment from the idac_environment.yml file in the root directory in the idac repository.  
+### Downloading IDAC
+Idac is a python module, meaning it can (and should) be imported directly to a python environment (e.g. `import idac as ida`).  
 
-To build the environment from the a .yml file, make sure you have [conda installed](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), then from the idac_linux_environment.yml file:
+First navigate to the [IDAC repository](https://github.com/UAF-WATC/idac) and download the source code.  There are numerous ways to do this, the easiest being to click on the green "code" button -> 'Download Zip'.  Unzip, the module in an appropriate directory.  For example, "python_modules" or "github_packages", if you have other python/github projects.  We do not recommend unpacking to your "Desktop" or other similar temporary locations. 
+
+Before installing IDAC, we must ensure the environment is set up correctly.  
+
+### Python Dependencies and Conda Environment
+IDAC requires several python modules, which are listed below.  The easiest way to install these dependencies is to build the environment from either the idac_linux_environment.yml or idac_mac_environment file in the root directory of the idac repository.  
+
+To build the environment from a .yml file, make sure you have [conda installed](https://docs.conda.io/projects/conda/en/latest/user-guide/install/), then from the idac_linux_environment.yml file:
 
 1.  Open a terminal and `cd` into the directory where the idac repo is downloaded.  
 2.  build the environment with: 
@@ -59,6 +66,18 @@ If you are running a different operating system, or you prefer to build the envi
 `conda create --name idac python=3.5 `
 2.  Install obspy with:
 `conda install obspy`
+
+### Installing IDAC
+
+Once the environment has been set-up, we can install IDAC using pip.  First activate the idac environment: 
+
+`conda activate idac`
+
+Then install the module with pip: 
+
+`pip install /path/to/idac/directory`
+
+
 
 
 
