@@ -88,6 +88,11 @@ If you are running a different operating system, or you prefer to build the envi
 `conda create --name idac python=3.5 `
 2.  Install obspy with:
 `conda install obspy`
+3.  Install pandas with: 
+`conda install pandas`
+4.  Install scikitlearn with 
+`conda install scikit-learn`
+5.  
 
 ### Installing IDAC
 
