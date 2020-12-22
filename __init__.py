@@ -10,4 +10,5 @@ from idac.functions.gen_rand_recordings import gen_rand_recordings
 from idac.functions.add_noise2wave import add_noise2wave
 from idac.functions.extract_features import extract_features
 from idac.functions.join_features import join_features
+from idac.functions.add_file_header import add_file_header
 

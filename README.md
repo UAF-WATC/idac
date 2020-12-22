@@ -34,9 +34,27 @@ The software [AVOG2S](https://github.com/usgs/volcano-avog2s) generates atmosphe
 ### NCPAProp
 NCPAProp is used to propagate source time functions (e.g. blast waves) through the modeled atmospheres. 
 
-To install NCPAProp: 
+NCPAProp relies on several libraries, which must be downloaded and compiled by source.  
+
+First download the [FFTW library](http://www.fftw.org/download.html) and extract the tar.gz file to a temporary directory (e.g. Desktop).  Then open a terminal and `cd` to the extracted files and run:
+`./configure`
+`make`
+`make install`
+Note you may need sudo privalges to install.
+
+Second we need download the latest version of [GSL](ftp://ftp.gnu.org/gnu/gsl/).  After download, extract the files to a temporary directory (e.g. Desktop).  
+
+
+
+
+
+
+
+
+To install NCPAProp:
 
 1.  Download the NCPAProp software from its github repo: [NCPAprop](https://github.com/chetzer-ncpa/ncpaprop)
+
 2.  Open a terminal and `cd` into the directory where the code was downloaded and run `./configure` with appropriate parameters. We recommend the following parameters, which install required PETSc and SLEPc libraries locally within the ncpaprop installation:
 
 `./configure --with-localpetsc --enable-autodependencies`

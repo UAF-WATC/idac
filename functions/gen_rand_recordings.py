@@ -3,7 +3,7 @@
 ##########################################
 
 
-import infid as inf
+import idac as ida
 import numpy as np
 import obspy
 import matplotlib.pyplot as plt

@@ -34,7 +34,8 @@ def gen_dispersion_curves(atm_dir, dispersion_save_dir, f_min, f_step, f_max, pr
             cur_dis_path = dispersion_save_dir + dispersion_file
 
             ## build command to create dispersion file
-            dispersion_cmd = ['ModBB', '--out_disp_src2rcv_file', cur_dis_path, '--atmosfile', cur_atm_path, '--atmosfileorder', atm_order, '--azimuth', str(azimuth), '--f_min', str(f_min), '--f_step', str(f_step), '--f_max', str(f_max), '--use_modess', '--skiplines', '0']
+            ##dispersion_cmd = ['ModBB', '--out_disp_src2rcv_file', cur_dis_path, '--atmosfile', cur_atm_path, '--atmosfileorder', atm_order, '--azimuth', str(azimuth), '--f_min', str(f_min), '--f_step', str(f_step), '--f_max', str(f_max), '--use_modess', '--skiplines', '0']
+            dispersion_cmd = ['ModBB', '--dispersion_file', cur_dis_path, '--atmosfile', cur_atm_path, '--azimuth', str(azimuth), '--f_min', str(f_min), '--f_step', str(f_step), '--f_max', str(f_max)]
 
 
             ## build the dispersion curve with the above command
