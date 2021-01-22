@@ -4,8 +4,10 @@
 import os 
 import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import idac as ida
 
-def gen_friedlander(weights, save_dir, time, dt, scaled_distances = [1]):
+def gen_friedlander(weights, save_dir, time, dt, distances = [1000], src_type='nuclear'):
 
     '''
     weights -- weight of the charge [KG]
@@ -13,6 +15,7 @@ def gen_friedlander(weights, save_dir, time, dt, scaled_distances = [1]):
     time -- time length of the Friedlander blash wave [seconds]
     dt -- sampling frequency [seconds]
     distances -- distance from center of explosive charge to the target [m]
+    src_type = whether to use nuclear or chemical equations
     '''
 
     ## generate at time axis
@@ -24,25 +27,17 @@ def gen_friedlander(weights, save_dir, time, dt, scaled_distances = [1]):
 
         ## loop over the distances (normally this isn't needed)
         j=0
-        while j < len(scaled_distances):
+        while j < len(distances):
 
             ## grab the current weight and distance
             cur_weight = weights[i]
-            cur_dist = scaled_distances[j]
+            cur_dist = distances[j]
 
-            ## define the scaled distance
-            cur_z = cur_dist/cur_weight
+            ## calculate the zero crossing crossing [seconds]
+            cur_ts = ida.calc_zero_xing(cur_weight, cur_dist, src_type)
 
-            ## calculate the zero crossing (ts) in milliseconds
-            ## cur_ts_ms = (180*(1+(cur_z/100)**3)) / ( (1+(cur_z/40))**(1/2) * (1+(cur_z/285)**5)**(1/5) * (1+(cur_z/50000))**(1/6) )
-            cur_ts_ms = (180*(1+(cur_z/100)**3)) / ( (1+(cur_z/40))**(1/2) * (1+(cur_z/285)**5)**(1/5) * (1+(cur_z/50000))**(1/6) ) * cur_weight**(1/3)
-            
-
-            ## put into seconds
-            cur_ts = cur_ts_ms / 1000
-
-            ## calculate the the amplitude
-            cur_amp = 3.2 * 10**6 * cur_z**(-3) * (1+(cur_z/87)**2)**(1/2) * (1 + (cur_z/800))
+            ## calculate the the amplitude [Pa]
+            cur_amp = ida.calc_overpressure(cur_weight, cur_dist, src_type=src_type)
 
             ## generate the Friedlander wave
             wig = cur_amp*np.exp(-tax/cur_ts) * (1 - tax/cur_ts)

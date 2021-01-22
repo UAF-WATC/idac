@@ -11,4 +11,7 @@ from idac.functions.add_noise2wave import add_noise2wave
 from idac.functions.extract_features import extract_features
 from idac.functions.join_features import join_features
 from idac.functions.add_file_header import add_file_header
+from idac.functions.run_ida import run_ida
+from idac.functions.calc_overpressure import calc_overpressure
+from idac.functions.calc_zero_xing import calc_zero_xing
 
