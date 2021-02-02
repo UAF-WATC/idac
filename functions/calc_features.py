@@ -11,8 +11,13 @@ from scipy.stats import kurtosis
 from scipy.stats import skew
 
 
-def calc_features(wig, sps):
+def calc_features(wig, sps, dmean = False):
 
+    ## dmean if you want
+    if dmean == True:
+        wig = wig - np.mean(wig)
+    #
+    
     ## transform the wiggle to its absolute value
     wig_abs = np.abs(wig)
     
@@ -64,28 +69,28 @@ def calc_features(wig, sps):
     ## event triggering ##
     ######################
 
-    ## create an obspy trace from the wiggle
-    wig_trace = obspy.Trace(wig)
-    wig_trace.stats.sampling_rate = sps
+    # ## create an obspy trace from the wiggle
+    # wig_trace = obspy.Trace(wig)
+    # wig_trace.stats.sampling_rate = sps
 
-    ## define a short and long term average
-    sta = 50
-    lta = 100
+    # ## define a short and long term average
+    # sta = 50
+    # lta = 100
 
-    ## define a threshold
-    stalta_thresh = 1
+    # ## define a threshold
+    # stalta_thresh = 1
 
-    ## generate a stalta series
-    stalta_series = classic_sta_lta(wig_trace.data, int(sta * sps), int(lta * sps))
+    # ## generate a stalta series
+    # stalta_series = classic_sta_lta(wig_trace.data, int(sta * sps), int(lta * sps))
 
-    ## find where the stalta series is above the threshold
-    triggers = trigger_onset(stalta_series,stalta_thresh,stalta_thresh)
+    # ## find where the stalta series is above the threshold
+    # triggers = trigger_onset(stalta_series,stalta_thresh,stalta_thresh)
 
-    ## how many triggers were there
-    td_num_triggers = len(triggers)
+    # ## how many triggers were there
+    # td_num_triggers = len(triggers)
 
-    #from obspy.signal.trigger import plot_trigger
-    #plot_trigger(wig_trace, stalta_series, stalta_thresh, stalta_thresh)
+    # ##from obspy.signal.trigger import plot_trigger
+    # ##plot_trigger(wig_trace, stalta_series, stalta_thresh, stalta_thresh)
 
 
     ######################
@@ -138,7 +143,8 @@ def calc_features(wig, sps):
     ## FEATURE SAVING ##
     ####################
 
-    cur_features = [td_sd, td_mean, td_skew, td_kurt, pam, td_num_triggers, td_n_outliers, fd_max, fd_peak_freq, fd_mean, fd_sd, fd_skew, fd_kurt,fd_25q, fd_50q, fd_75q]
+    ##cur_features = [td_sd, td_mean, td_skew, td_kurt, pam, td_num_triggers, td_n_outliers, fd_max, fd_peak_freq, fd_mean, fd_sd, fd_skew, fd_kurt,fd_25q, fd_50q, fd_75q]
+    cur_features = [td_sd, td_mean, td_skew, td_kurt, pam, td_n_outliers, fd_max, fd_peak_freq, fd_mean, fd_sd, fd_skew, fd_kurt,fd_25q, fd_50q, fd_75q]
    
     return(cur_features)
 

@@ -46,7 +46,7 @@ def run_ida(input_path, gen_atms=False, gen_friedlanders=False, gen_dispersion_c
 
     ## this generates files saved to a local directory
     if gen_dispersion_curves == True: 
-        ida.gen_dispersion_curves(atm_dir=ns['atm_save_dir'], dispersion_save_dir=ns['dispersion_save_dir'], f_min=ns['f_min'], f_step=ns['f_step'], f_max=ns['f_max'], prop_directions=ns['prop_directions'], disp_method=ns['disp_method'], which_cores=ns['which_cores'])
+        ida.gen_dispersion_curves(atm_dir=ns['atm_save_dir'], dispersion_save_dir=ns['dispersion_save_dir'], f_min=ns['f_min'], f_step=ns['f_step'], f_max=ns['f_max'], prop_directions=ns['prop_directions'], disp_method=ns['disp_method'], which_cores=ns['which_cores'], wvnum_filter=ns['wvnum_filter'], c_min=ns['c_min'], c_max=ns['c_max'])
     #
     
 
@@ -66,7 +66,7 @@ def run_ida(input_path, gen_atms=False, gen_friedlanders=False, gen_dispersion_c
 
     ## this generates files saved to a local directory
     if gen_rand_recordings == True:
-        ida.gen_rand_recordings(ns['client'], ns['network'], ns['station'], ns['location'], ns['channel'], ns['years'], ns['months'], ns['days'], ns['hours'], ns['mins'], ns['secs'], ns['n_wigs'],ns['rand_save_dir'])
+        ida.gen_rand_recordings(ns['client'], ns['networks'], ns['stations'], ns['locations'], ns['channels'], ns['rand_years'], ns['rand_months'], ns['rand_days'], ns['rand_hours'], ns['rand_mins'], ns['rand_secs'], ns['n_rand_wigs'],ns['rand_save_dir'], wig_length=ns['rand_wig_length'])
     #
     
 
@@ -76,7 +76,7 @@ def run_ida(input_path, gen_atms=False, gen_friedlanders=False, gen_dispersion_c
 
     ## this generates files saved to a local directory
     if add_noise2waves == True:
-        ida.add_noise2wave(ns['rand_rec_dir'], ns['prop_dir'], ns['amp_scale'], ns['rem_shadow'], ns['noisy_wave_save_dir'])
+        ida.add_noise2wave(ns['rand_save_dir'], ns['prop_wave_dir'], ns['rem_shadow'], ns['noisy_wave_save_dir'], ns['snr_ratio'], ns['source_time_fun_save_dir'])
     #
     
 

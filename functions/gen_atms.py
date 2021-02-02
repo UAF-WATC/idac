@@ -8,7 +8,7 @@ import numpy as np
 import idac as ida
 
 
-def gen_atms(atm_build_dir, atm_save_dir, years, months, days, hours, lats, longs, zmax, dz, ap=10.0, f107=77):
+def gen_atms(atm_build_dir, atm_save_dir, years, months, days, hours, lats, longs, zmax, dz, ap=10.0, f107=77, atm_file_name = 'default'):
 
 
     ## change to the atmosphere buidling room
@@ -84,7 +84,11 @@ def gen_atms(atm_build_dir, atm_save_dir, years, months, days, hours, lats, long
 
 
         ## define what the atmospheric file name will be
-        atm_file=str(cur_year) + save_month + save_day + save_hour + '_' + str(cur_lat) + '_' + str(cur_long) + '.dat'
+        if atm_file_name == 'default':
+            atm_file=str(cur_year) + save_month + save_day + save_hour + '_' + str(cur_lat) + '_' + str(cur_long) + '.dat'
+        if atm_file_name != 'default':
+            atm_file = atm_file_name
+        #
 
         ## copy the data from the building room up a directory
         copy_atm_cmd = ['cp', 'sonde_ztuvrp.dat', atm_save_dir + atm_file]

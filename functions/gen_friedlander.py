@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import idac as ida
 
-def gen_friedlander(weights, save_dir, time, dt, distances = [1000], src_type='nuclear'):
+def gen_friedlander(weights, save_dir, time, dt, distances = [500], src_type='nuclear'):
 
     '''
     weights -- weight of the charge [KG]
@@ -41,6 +41,33 @@ def gen_friedlander(weights, save_dir, time, dt, distances = [1000], src_type='n
 
             ## generate the Friedlander wave
             wig = cur_amp*np.exp(-tax/cur_ts) * (1 - tax/cur_ts)
+
+            
+
+            #################
+            ### FILTERING ###
+            #################
+
+            from scipy.signal import butter, lfilter
+
+            def butter_bandpass(highcut, fs, order):
+                nyq = 0.5 * fs
+                high = highcut / nyq
+                b, a = butter(order, [high], btype='lowpass')
+                return b, a
+
+
+            def butter_bandpass_filter(data, highcut, fs, order):
+                b, a = butter_bandpass(highcut, fs, order=order)
+                y = lfilter(b, a, data)
+                return y
+
+            wig = butter_bandpass_filter(data=wig, highcut=1, fs=1/dt, order=4)
+
+            #################
+
+
+
 
             ## add the time axis and wiggle together
             fried_wave = np.zeros([len(tax),2])

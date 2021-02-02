@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import os
 
 
-def extract_features(wave_dir, save_dir, save_file, file_inds=[]):
+def extract_features(wave_dir, save_dir, save_file, file_inds=[],dmean=False):
 
     ##list all the waveform files
     wave_files = os.listdir(wave_dir)
@@ -25,7 +25,7 @@ def extract_features(wave_dir, save_dir, save_file, file_inds=[]):
     dme_synth = obspy.read(wave_dir + wave_files[0])
     dme_wig = dme_synth[0].data
     dme_sps = dme_synth[0].stats.sampling_rate
-    dme_features = inf.calc_features(dme_wig,dme_sps)
+    dme_features = ida.calc_features(dme_wig,dme_sps)
 
     ## setup an array to hold all the features
     all_features = np.zeros((len(wave_files),len(dme_features)))
@@ -47,7 +47,7 @@ def extract_features(wave_dir, save_dir, save_file, file_inds=[]):
         ########################
 
         ## calculate the current feature
-        cur_features = inf.calc_features(wig, sps)
+        cur_features = ida.calc_features(wig, sps, dmean)
 
         ## add the current feature to the all features array
         all_features[i,:] = cur_features

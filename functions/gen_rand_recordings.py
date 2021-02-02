@@ -34,6 +34,7 @@ secs -- list of strings giving the seconds to sample from
 n_wigs -- number of sample wiggles to generate and save 
 save_dir -- directory where random wiggles will be saved 
 wig_length -- time length of wiggle to generate [seconds]
+n_wig_buffer -- how to scale number of n_wigs as some data will not exist [percent]
 
 
 #############
@@ -52,16 +53,19 @@ obspy strems written to your local disk
 '''
 
 
-def gen_rand_recordings(client, networks, stations, locations, channels, years, months, days, hours, mins, secs, n_wigs, save_dir, wig_length):
+def gen_rand_recordings(client, networks, stations, locations, channels, years, months, days, hours, mins, secs, n_wigs, save_dir, wig_length, n_wig_buffer=1.5):
+
+    ## scale the number of wiggles according to the buffer
+    n_wigs = int(n_wigs * n_wig_buffer)
 
     ## find all permutations of the time inputs 
     all_inputs = [[i,j,k,l,m,n] for i in years for j in months for k in days for l in hours for m in mins for n in secs]
 
     ## define a set of UNIQUE indicies to sample all the time inputs
-    time_inds = random.sample(range(1,len(all_inputs)), n_wigs)
+    time_inds = random.sample(range(1,len(all_inputs)-1), n_wigs)
 
     ## define a set of indices to sample the station inventory
-    inventory_inds = [random.randint(0, len(networks)) for i in time_inds]
+    inventory_inds = [random.randint(0, len(networks)-1) for i in time_inds]
 
 
     ## generate n_wigs worth of random times
@@ -90,22 +94,28 @@ def gen_rand_recordings(client, networks, stations, locations, channels, years, 
         cur_start=UTCDateTime(cur_year, cur_month, cur_day, cur_hour, cur_min, cur_sec)
         cur_stop = cur_start + wig_length
 
-        ## read in the stream
-        cur_stream = client.get_waveforms(cur_network, cur_station, cur_location, cur_channel, cur_start, cur_stop,attach_response=True)
+        ## try to read in the stream
+        try:
+            cur_stream = client.get_waveforms(cur_network, cur_station, cur_location, cur_channel, cur_start, cur_stop,attach_response=True)
 
-        ## remove sensativity
-        cur_stream.remove_sensitivity()
+            ## remove sensativity
+            cur_stream.remove_sensitivity()
 
-        ##############
-        ### SAVING ###
-        ##############
+            ##############
+            ### SAVING ###
+            ##############
 
-        ## get a good file name
-        save_file = cur_network + '_' + cur_station + '_' + cur_location + '_' + cur_channel + '_' + str(cur_year) + '_' + str(cur_month) + '_' + str(cur_day) + '_' + str(cur_hour) + '_' + str(cur_min) + '_' + str(cur_sec) + '.mseed'
+            ## get a good file name
+            save_file = cur_network + '_' + cur_station + '_' + cur_location + '_' + cur_channel + '_' + str(cur_year) + '_' + str(cur_month) + '_' + str(cur_day) + '_' + str(cur_hour) + '_' + str(cur_min) + '_' + str(cur_sec) + '.mseed'
 
-        save_path = save_dir + save_file
+            save_path = save_dir + save_file
 
-        cur_stream.write(save_path)
+            cur_stream.write(save_path)
+
+
+        except:
+            print('no data found moving on')
+        #
 
         i=i+1
         print(i)
