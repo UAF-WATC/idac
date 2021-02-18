@@ -60,8 +60,8 @@ def train_vanilla_ann(labeled_features,num_epochs=5):
 
 
 
-    model.add(Dense(features.shape[1], activation="relu"))
-    model.add(Dense(features.shape[1], activation="relu"))
+    ##model.add(Dense(features.shape[1], activation="relu"))
+    ##model.add(Dense(features.shape[1], activation="relu"))
 
 
 

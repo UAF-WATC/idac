@@ -26,7 +26,7 @@ def run_ida(input_path, gen_atms=False, gen_friedlanders=False, gen_dispersion_c
 
     ## this generates files saved to a local directory
     if gen_atms == True: 
-        ida.gen_atms(atm_build_dir=ns['atm_build_dir'], atm_save_dir=ns['atm_save_dir'], years=ns['atm_years'], months=ns['atm_months'], days=ns['atm_days'], hours=ns['atm_hours'], lats=ns['atm_lats'], longs=ns['atm_lats'], zmax=ns['zmax'], dz=ns['dz'])
+        ida.gen_atms(atm_build_dir=ns['atm_build_dir'], atm_save_dir=ns['atm_save_dir'], years=ns['atm_years'], months=ns['atm_months'], days=ns['atm_days'], hours=ns['atm_hours'], lats=ns['atm_lats'], longs=ns['atm_longs'], zmax=ns['zmax'], dz=ns['dz'])
     #
 
     

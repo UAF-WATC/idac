@@ -1,4 +1,7 @@
 
+###############
+## FUNCTIONS ##
+###############
 
 from idac.functions.calc_features import calc_features
 from idac.functions.train_vanilla_ann import train_vanilla_ann
@@ -14,4 +17,14 @@ from idac.functions.add_file_header import add_file_header
 from idac.functions.run_ida import run_ida
 from idac.functions.calc_overpressure import calc_overpressure
 from idac.functions.calc_zero_xing import calc_zero_xing
+from idac.functions.load_atm import load_atm
+from idac.functions.load_src_fxns import load_src_fxns
+
+
+#############
+## Classes ##
+#############
+
+from idac.classes.atmosphere import atmosphere
+from idac.classes.src_fxns import src_fxns
 
