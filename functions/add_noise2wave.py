@@ -9,6 +9,7 @@ import obspy
 from obspy.clients.fdsn import Client
 from obspy import UTCDateTime
 import scipy.signal as signal
+import idac as ida
 
 
 
@@ -129,8 +130,10 @@ def add_noise2wave(rand_rec_dir, prop_dir, rem_shadow, save_dir, snr_ratio, src_
         max_prop_wave = np.max(prop_wave_org[:,1] - min_prop_wave)
 
         prop_wave_scale = prop_wave.copy()
-        prop_wave_scale[:,1] = ((prop_wave_org[:,1]-min_prop_wave)/max_prop_wave*2 -1)  * std_stream * snr_ratio
+        ##prop_wave_scale[:,1] = ((prop_wave_org[:,1]-min_prop_wave)/max_prop_wave*2 -1)  * std_stream * snr_ratio
+        prop_wave_scale[:,1] = (ida.range01(prop_wave_org[:,1]) - 0.5)  * std_stream * snr_ratio
 
+        ### REPLACE THE PROPAGATED WAVE WITH SCALED WAVE ###
         ## move the scaled waveform back to the propagated wave name
         prop_wave = prop_wave_scale
 
@@ -150,6 +153,7 @@ def add_noise2wave(rand_rec_dir, prop_dir, rem_shadow, save_dir, snr_ratio, src_
         ## add the resampled propagated wave to the infrasound wiggle
         synth_event = cur_stream[:]
         synth_event[0]=obspy.Trace(np.array(synth_event[0]) + prop_wave_resample[:,1])
+        ##synth_event[0]=obspy.Trace(prop_wave_resample[:,1])
 
         synth_event[0].stats = cur_stream[0].stats
 

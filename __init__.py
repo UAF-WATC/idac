@@ -19,7 +19,8 @@ from idac.functions.calc_overpressure import calc_overpressure
 from idac.functions.calc_zero_xing import calc_zero_xing
 from idac.functions.load_atm import load_atm
 from idac.functions.load_src_fxns import load_src_fxns
-
+from idac.functions.range01 import range01
+from idac.functions.calc_bearing import calc_bearing
 
 #############
 ## Classes ##
