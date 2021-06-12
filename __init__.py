@@ -21,6 +21,10 @@ from idac.functions.load_atm import load_atm
 from idac.functions.load_src_fxns import load_src_fxns
 from idac.functions.range01 import range01
 from idac.functions.calc_bearing import calc_bearing
+from idac.functions.fit_roger2data import fit_roger2data
+from idac.functions.gen_roger_sources import gen_roger_sources
+from idac.functions.scale_wig import scale_wig
+from idac.functions.center_wig import center_wig
 
 #############
 ## Classes ##

@@ -16,7 +16,7 @@ from keras.layers import Dense
 #from sklearn.metrics import accuracy_score
 
 
-def train_vanilla_ann(labeled_features,num_epochs=5):
+def train_vanilla_ann(labeled_features, num_epochs=5, norm_features=True):
 
     
     ###############################
@@ -28,17 +28,17 @@ def train_vanilla_ann(labeled_features,num_epochs=5):
     labeled_features = labeled_features[~pd.isnull(labeled_features).any(axis=1)]
 
     # isolate the features and the labels from the dataframe
-    features_unnorm = labeled_features.drop(labels='category_id',axis=1)
+    features = labeled_features.drop(labels='category_id',axis=1)
     labels_raw = labeled_features['category_id']
 
     ## reshape labels from a column 'vector' to row 'vector'
     labels_raw = np.array(labels_raw).reshape(len(labels_raw),1)
 
-    ## Normalize the data (mean=0 and std=1)
-    sc = StandardScaler()
-    features = sc.fit_transform(features_unnorm)
-    
-    
+    if norm_features == True:
+        ## Normalize the data (mean=0 and std=1)
+        sc = StandardScaler()
+        features = sc.fit_transform(features)
+    #    
 
     # one hot encode the raw labels
     ohe = OneHotEncoder()
@@ -81,6 +81,14 @@ def train_vanilla_ann(labeled_features,num_epochs=5):
     history = model.fit(features_train, labels_train,validation_data = (features_test,labels_test), epochs=num_epochs, batch_size=64)
 
     ## return the model, scaling factors, and training history.
-    return([model, sc, history])
+    if norm_features == True:
+        return([model, sc, history])
+    #
+    if norm_features == False:
+        return([model, history])
+    #
+#
+
+
 
 

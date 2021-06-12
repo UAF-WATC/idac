@@ -52,8 +52,22 @@ However len(years) doesn't have to equal len(days), len(hours), len(mins), len(s
 obspy strems written to your local disk
 '''
 
+## create a range of times
+# years = ['2012']
+# months = np.arange(12)[::4] + 1  ##['1','2','3','4','5','6','7','8','9','10','11','12']
+# days = [str(i) for i in (np.arange(28)+1)]
+# hours = [str(i) for i in (np.arange(23)+1)]
+# mins = [str(i) for i in (np.arange(59)+1)]
+# secs = [str(i) for i in (np.arange(59)+1)]
+# n_wigs = atm_params * src_params * dispersion_params * prop_params * 2 
+# n_wig_buffer=50
+# save_dir = project_dir + 'modeled_data/random_recordings/'
+# wig_length=500.0
 
-def gen_rand_recordings(client, networks, stations, locations, channels, years, months, days, hours, mins, secs, n_wigs, save_dir, wig_length, n_wig_buffer=1.5):
+def gen_rand_recordings(client, networks, stations, locations, channels, years, months, days, hours, mins, secs, n_wigs, save_dir, wig_length, n_wig_buffer=50):
+
+    ## keep the original number of random wiggels
+    n_wigs_org = n_wigs
 
     ## scale the number of wiggles according to the buffer
     n_wigs = int(n_wigs * n_wig_buffer)
@@ -61,16 +75,22 @@ def gen_rand_recordings(client, networks, stations, locations, channels, years, 
     ## find all permutations of the time inputs 
     all_inputs = [[i,j,k,l,m,n] for i in years for j in months for k in days for l in hours for m in mins for n in secs]
 
+    ## randomly shuffle this list
+    random.shuffle(all_inputs)
+
     ## define a set of UNIQUE indicies to sample all the time inputs
-    time_inds = random.sample(range(1,len(all_inputs)-1), n_wigs)
+    ##time_inds = random.sample(range(1,len(all_inputs)-1), n_wigs)
 
     ## define a set of indices to sample the station inventory
-    inventory_inds = [random.randint(0, len(networks)-1) for i in time_inds]
-
+    ##inventory_inds = [random.randint(0, len(networks)-1) for i in time_inds]
+    inventory_inds = [random.randint(0, len(networks)-1) for i in all_inputs]
+    
 
     ## generate n_wigs worth of random times
-    i=0
-    while i < n_wigs:
+    j=len(os.listdir(save_dir)) ## for counting number of files generated
+    i=0 ## for indexing data
+
+    while j < n_wigs_org:
 
         ## define the current station inventory
         cur_network = networks[inventory_inds[i]]
@@ -79,7 +99,8 @@ def gen_rand_recordings(client, networks, stations, locations, channels, years, 
         cur_channel = channels[inventory_inds[i]]
         
         ## define the current time inputs
-        cur_time_inputs = all_inputs[time_inds[i]]
+        ##cur_time_inputs = all_inputs[time_inds[i]]
+        cur_time_inputs = all_inputs[i]
         cur_time_inputs = [int(i) for i in cur_time_inputs]
 
         ## sample each of the time elements
@@ -106,7 +127,7 @@ def gen_rand_recordings(client, networks, stations, locations, channels, years, 
             ##############
 
             ## get a good file name
-            save_file = cur_network + '_' + cur_station + '_' + cur_location + '_' + cur_channel + '_' + str(cur_year) + '_' + str(cur_month) + '_' + str(cur_day) + '_' + str(cur_hour) + '_' + str(cur_min) + '_' + str(cur_sec) + '.mseed'
+            save_file=cur_network +'_'+ cur_station +'_'+ cur_location +'_'+ cur_channel +'_'+ str(cur_year) +'_'+ str(cur_month) +'_'+ str(cur_day) +'_'+ str(cur_hour) +'_'+ str(cur_min) +'_'+ str(cur_sec) + '.mseed'
 
             save_path = save_dir + save_file
 
@@ -118,6 +139,7 @@ def gen_rand_recordings(client, networks, stations, locations, channels, years, 
         #
 
         i=i+1
+        j=len(os.listdir(save_dir))
         print(i)
     #
 

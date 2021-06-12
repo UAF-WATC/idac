@@ -14,7 +14,7 @@ multiple and potentially very large datafiles written to your local disk
 '''
 
 
-def run_ida(input_path, gen_atms=False, gen_friedlanders=False, gen_dispersion_curves=False, prop_waveforms=False,gen_rand_recordings=False, add_noise2waves=False) :
+def run_ida(input_path, gen_atms=False, gen_source_time_functions=False, gen_dispersion_curves=False, prop_waveforms=False, gen_rand_recordings=False, add_noise2waves=False) :
 
     ## read in (execute/open) the input file
     ns={}
@@ -25,18 +25,18 @@ def run_ida(input_path, gen_atms=False, gen_friedlanders=False, gen_dispersion_c
     ###########################
 
     ## this generates files saved to a local directory
-    if gen_atms == True: 
+    if gen_atms == True:
         ida.gen_atms(atm_build_dir=ns['atm_build_dir'], atm_save_dir=ns['atm_save_dir'], years=ns['atm_years'], months=ns['atm_months'], days=ns['atm_days'], hours=ns['atm_hours'], lats=ns['atm_lats'], longs=ns['atm_longs'], zmax=ns['zmax'], dz=ns['dz'])
     #
 
     
-    ######################################################
-    ### GENERATE THE FRIEDLANDER SOURCE TIME FUNCTIONS ###
-    ######################################################
+    ##########################################
+    ### GENERATE THE SOURCE TIME FUNCTIONS ###
+    ##########################################
 
     ## this generates files saved to a local directory
-    if gen_friedlanders == True: 
-        ida.gen_friedlander(weights=ns['weights'], save_dir=ns['source_time_fun_save_dir'], time=ns['time'], dt=ns['dt'], src_type=ns['src_type'])
+    if gen_source_time_functions == True:
+        ida.gen_roger_sources(data_dir = ns['hrr_data_dir'], save_dir=ns['source_time_fun_save_dir'], yields=ns['hrr_yields'], f_min=ns['roger_source_fmin'], f_max=ns['roger_source_fmax'], min_scale_dist=ns['roger_min_scale_dist'], max_scale_dist=ns['roger_max_scale_dist'], source_length=ns['roger_source_time'])
     #
     
     
@@ -76,7 +76,7 @@ def run_ida(input_path, gen_atms=False, gen_friedlanders=False, gen_dispersion_c
 
     ## this generates files saved to a local directory
     if add_noise2waves == True:
-        ida.add_noise2wave(ns['rand_save_dir'], ns['prop_wave_dir'], ns['rem_shadow'], ns['noisy_wave_save_dir'], ns['snr_ratio'], ns['source_time_fun_save_dir'])
+        ida.add_noise2wave(rand_rec_dir=ns['rand_save_dir'], prop_dir=ns['prop_wave_dir'], save_dir=ns['noisy_wave_save_dir'], snr_ratio=ns['snr_ratio'])
     #
     
 

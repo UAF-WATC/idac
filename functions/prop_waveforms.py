@@ -2,7 +2,6 @@
 ## ---- Propagate Waveform through Atmospheres ---- ##
 ######################################################
 
-
 import numpy as np
 import subprocess
 import os
@@ -49,10 +48,6 @@ def prop_waveforms(dispersion_dir, source_time_fxn_dir, atm_dir, prop_dists, max
 
                 ## define propagated wave path
                 prop_wave_path = prop_wave_dir + prop_wave_file
-
-
-                ## write the command to do the propagation
-                ##prop_cmd = ['ModBB', '--pulse_prop_src2rcv', cur_dispersion_path, '--range_R_km', str(range_dist), '--waveform_out_file', prop_wave_path, '--src_waveform_file', cur_source_time_fxn_path, '--max_celerity', str(max_celerity)]
 
                 prop_cmd = ['ModBB', '--propagation', '--input_dispersion_file', cur_dispersion_path, '--range_km', str(range_dist), '--output_waveform_file', prop_wave_path, '--source waveform', '--source_file', cur_source_time_fxn_path, '--max_celerity', str(max_celerity)]
 

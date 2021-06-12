@@ -12,8 +12,16 @@ import scipy.signal as signal
 import idac as ida
 
 
+# project_dir = '/home/alex/projects/idac_projects/final_run/propagation_projects/0_degrees/'
+# rand_rec_dir =  project_dir + 'modeled_data/random_recordings/'
+# prop_dir = project_dir + 'modeled_data/propagated_waves/'
+# rem_shadow = False
+# save_dir = project_dir + 'modeled_data/random_recordings/'
+# snr_ratio = 1
+# src_dir = project_dir + 'modeled_data/source_time_fxns/'
 
-def add_noise2wave(rand_rec_dir, prop_dir, rem_shadow, save_dir, snr_ratio, src_dir):
+
+def add_noise2wave(rand_rec_dir, prop_dir, save_dir, snr_ratio=None):
 
     ##########################
     ### WHERE ARE THE DATA ###
@@ -25,35 +33,6 @@ def add_noise2wave(rand_rec_dir, prop_dir, rem_shadow, save_dir, snr_ratio, src_
     ## the propagated waveform files
     prop_files = os.listdir(prop_dir)
 
-    ## find the max amplitude for each source time function
-    ## ro remove the shadow
-    if rem_shadow == True:
-
-        ## assume we know exactly where the source time functions are
-        src_time_files = np.sort(os.listdir(src_dir))
-
-        ## setup a list to hold the files and max amplitude
-        src_amps = [np.nan] * len(src_time_files)
-
-        ## loop over the source files
-        i=0
-        while i < len(src_time_files):
-
-            ## what is the current source file
-            cur_src_file = src_time_files[i]
-
-            ## read in the current source function
-            cur_src = np.loadtxt(src_dir + cur_src_file)
-
-            ## find the max value in the current source
-            cur_max = np.max(cur_src[:,1])
-
-            ## populate the source amplitude list
-            src_amps[i] = [cur_src_file, cur_max]
-            i=i+1
-        #
-        
-        
     ## loop over the propagated files
     i=0
     while i < len(prop_files):
@@ -79,65 +58,73 @@ def add_noise2wave(rand_rec_dir, prop_dir, rem_shadow, save_dir, snr_ratio, src_
         ## make a copy of the original
         prop_wave = prop_wave_org.copy()
 
-
-        ############################
-        ### SHADOW ZONE ANALYSIS ###
-        ############################
-
-        ### CHECK IF PROPAGATED WAVE IS IN "SHADOW ZONE"
-        if rem_shadow == True:
-
-            ## grab meta data from propagated wave file
-            prop_wave_info = cur_prop_file.split('_')
-
-            ## what is the propagation distance
-            prop_dist = float(prop_wave_info[7].split('.')[0]) * 1000 # [km] -> [m]
-
-            ## find the source time functions
-            source_time_fun_file = '_'.join(prop_wave_info[0:3]) + '.dat'
-
-            ## find the maximum from the source amps list
-            source_max = src_amps[np.where([source_time_fun_file in i for i in src_amps])[0][0]][1]
-
-            ##source_time_fun = np.loadtxt(project_dir + 'modeled_data/source_time_fxns/' + source_time_fun_file)
-            ## find the maximum of the source time function
-            ##source_max = np.max(source_time_fun[:,1])
-
-
-            ## define a shadow tolerance based on source amplitude and propagation distance
-            shadow_tol = 1/prop_dist * source_max
-
-            if np.max(prop_wave[:,1])*10 < shadow_tol:
-                i=i+1
-                print('pass')
-                continue
+        ## sometimes there aren't any values in the propagated wave (rare)
+        if any(np.isnan(prop_wave[:,1])):
+            i=i+1
+            continue
         #
 
+        ###################################
+        ## window the propagated arrival ##
+        ###################################
 
-        #######################################
-        ## SCALE WAVE ABOVE BACKGROUND NOISE ##
-        #######################################
+        ## propagated wave sps 
+        prop_wave_sps = 1/np.median(np.diff(prop_wave[:,0]))
 
-        ## define a minimum signal to noise ratio
-        ##snr_ratio = 5  ## already defined in the input params file
+        ## define arrival window length and samples
+        arrival_win = 10 #seconds
+        arrival_win_samps = arrival_win * prop_wave_sps
 
-        ## find noise in random recording
-        mean_stream = np.mean(cur_stream[0][:])
-        std_stream = np.std(cur_stream[0][:])
-      
-        ## scale propagated wave
-        min_prop_wave = np.min(prop_wave_org[:,1])
-        max_prop_wave = np.max(prop_wave_org[:,1] - min_prop_wave)
+        ## find arrival of propagated wave
+        arrival_ind = np.argmax(np.abs(prop_wave[:,1]))
 
-        prop_wave_scale = prop_wave.copy()
-        ##prop_wave_scale[:,1] = ((prop_wave_org[:,1]-min_prop_wave)/max_prop_wave*2 -1)  * std_stream * snr_ratio
-        prop_wave_scale[:,1] = (ida.range01(prop_wave_org[:,1]) - 0.5)  * std_stream * snr_ratio
+        ## shift the arrival propagated wave so arrival is centered
+        shift_by = (len(prop_wave) - arrival_ind) - int(len(prop_wave)/2)
+        shift_prop_wave = prop_wave.copy()
+        shift_prop_wave[:,1] = np.roll(shift_prop_wave[:,1], shift_by)
 
-        ### REPLACE THE PROPAGATED WAVE WITH SCALED WAVE ###
-        ## move the scaled waveform back to the propagated wave name
-        prop_wave = prop_wave_scale
-
+        ## finally window in the arrival
+        shift_arrival_ind = np.argmax(np.abs(shift_prop_wave[:,1]))
+        win_start = shift_arrival_ind - int(arrival_win_samps/2)
+        win_end = shift_arrival_ind + int(arrival_win_samps/2)
+        win_prop_wave = shift_prop_wave[win_start:win_end,:]
         
+
+        ##################################################
+        ## SCALE BACKGROUND NOISE BELOW PROPAGATED WAVE ##
+        ##################################################
+
+        ## stream sampling rate
+        stream_sps = cur_stream[0].stats['sampling_rate']
+
+        ## calculate power of stream and propagated wave
+        stream_power = np.sum(np.abs(cur_stream[0].data)) / stream_sps / len(cur_stream[0].data)
+        prop_wave_power = np.sum(np.abs(win_prop_wave[:,1])) / prop_wave_sps / len(win_prop_wave)
+
+        ## current snr
+        cur_snr = prop_wave_power / stream_power
+
+        ## find the scale factor to force correct snr
+        ## if no snr ratio is given
+        if snr_ratio is None:
+            scale_factor = 0
+        #
+        if snr_ratio is not None:
+            scale_factor = 1/(stream_power * snr_ratio / prop_wave_power)
+        #
+
+        ## multiply the cur stream by the scale factor
+        scale_stream = cur_stream.copy()
+        scale_stream[0].data = scale_stream[0].data * scale_factor
+
+        ## CHECK MODIFIED SNR RATIO ## 
+        # t1 = np.sum(np.abs(scale_stream[0].data)) / stream_sps / len(cur_stream[0].data)
+        # t2 = np.sum(np.abs(win_prop_wave[:,1])) / prop_wave_sps / len(win_prop_wave)  
+
+        # ## current snr
+        # t_snr = t2 / t1
+
+
         ###################################################
         ### ADD RANDOM RECORDED DATA TO PROPAGATED WAVE ###
         ###################################################
@@ -151,7 +138,8 @@ def add_noise2wave(rand_rec_dir, prop_dir, rem_shadow, save_dir, snr_ratio, src_
         prop_wave_resample[:,1] = signal.resample(prop_wave[:,1], n_wig)
 
         ## add the resampled propagated wave to the infrasound wiggle
-        synth_event = cur_stream[:]
+        #synth_event = cur_stream[:]
+        synth_event = scale_stream
         synth_event[0]=obspy.Trace(np.array(synth_event[0]) + prop_wave_resample[:,1])
         ##synth_event[0]=obspy.Trace(prop_wave_resample[:,1])
 

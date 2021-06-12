@@ -10,7 +10,6 @@ class atmosphere:
         self.data = data
         self.metadata = metadata
     #
-   
 
     def plot_effective_wind_speed(self, lat, lon, pad_lat=1, pad_lon=1, azimuths=[135, 90, 45, 180, 0, 225, 270, 315], c_pad=50):
 

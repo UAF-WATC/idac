@@ -20,7 +20,7 @@ def calc_bearing(p1, p2):
     x = cos(radians(lat2)) * sin(radians(long2 - long1))
     y = cos(radians(lat1))*sin(radians(lat2))-sin(radians(lat1))*cos(radians(lat2))*cos(radians(long2-long1))
 
-    bearing = atan2(x,y) * 180/np.pi 
+    bearing = atan2(x,y) * 180/np.pi
     
     return(bearing)
 

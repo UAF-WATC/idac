@@ -11,15 +11,19 @@ from scipy.stats import kurtosis
 from scipy.stats import skew
 
 
-def calc_features(wig, sps, dmean = False):
+def calc_features(wig, sps):
 
-    ## dmean if you want
-    if dmean == True:
-        wig = wig - np.mean(wig)
-    #
-    
     ## transform the wiggle to its absolute value
     wig_abs = np.abs(wig)
+
+
+    # import matplotlib.pyplot as plt
+    # fig, axs  = plt.subplots(2,1)
+    # axs[0].plot(wig)
+    # axs[1].plot(wig_abs)
+    # plt.ginput(1)
+    # plt.clf()
+    
     
 
     #################
@@ -45,7 +49,7 @@ def calc_features(wig, sps, dmean = False):
     ## number of outliers ##
     ########################
 
-    td_med = np.median(wig)
+    td_med = np.median(wig) 
     td_q25 = np.quantile(wig,0.25)
     td_q75 = np.quantile(wig,0.75)
     inter_quantile = td_q75 - td_q25
@@ -61,7 +65,7 @@ def calc_features(wig, sps, dmean = False):
     td_outliers = np.where(td_lower_outliers + td_upper_outliers >= 1)
 
     ## number of outliers
-    td_n_outliers = len(td_outliers[0])
+    td_n_outliers = len(td_outliers[0]) / len(wig)
     
 
     
@@ -110,13 +114,13 @@ def calc_features(wig, sps, dmean = False):
     WIG = np.abs(np.fft.fft(wig))
 
     ## max frequency
-    fd_max = np.max(WIG[0:int(len(WIG)/2)])
+    fd_max = np.max(WIG[0:int(len(WIG)/2)]) / len(wig)
 
     ## find the peak frequency below the nyquist...
     fd_peak_freq = fax[np.argmax(WIG[0:int(len(WIG)/2)])]
 
     ## mean frequency
-    fd_mean = np.mean(WIG)
+    fd_mean = np.mean(WIG) 
 
     ## standard deviation
     fd_sd = np.std(WIG)
@@ -145,6 +149,7 @@ def calc_features(wig, sps, dmean = False):
 
     ##cur_features = [td_sd, td_mean, td_skew, td_kurt, pam, td_num_triggers, td_n_outliers, fd_max, fd_peak_freq, fd_mean, fd_sd, fd_skew, fd_kurt,fd_25q, fd_50q, fd_75q]
     cur_features = [td_sd, td_mean, td_skew, td_kurt, pam, td_n_outliers, fd_max, fd_peak_freq, fd_mean, fd_sd, fd_skew, fd_kurt,fd_25q, fd_50q, fd_75q]
+    ##cur_features = [pam, td_n_outliers, fd_max, fd_peak_freq, fd_25q, fd_50q, fd_75q]
    
     return(cur_features)
 
