@@ -10,7 +10,7 @@ import os
 from scipy import signal
 
 
-def extract_features(wave_dir, save_dir, save_file, file_inds=[], filter_wig=False, scale_wig=False, win_wig=None):
+def extract_features(wave_dir, save_dir, save_file, file_inds=[], filter_wig=False, scale_wig=False, range01_wig=False, win_wig=None):
 
     ##list all the waveform files
     wave_files = os.listdir(wave_dir)
@@ -46,14 +46,10 @@ def extract_features(wave_dir, save_dir, save_file, file_inds=[], filter_wig=Fal
 
         ## filter
         if filter_wig==True:
-            b, a = signal.butter(N=2, Wn=[0.01, 10], btype='bandpass',fs=sps)
+            b, a = signal.butter(N=2, Wn=[0.02, 5], btype='bandpass',fs=sps)
             wig = signal.filtfilt(b, a, wig)
         #
-
-        if scale_wig == True:
-            wig = ida.scale_wig(wig)
-        #
-
+        
         ## window wiggle if necessary
         if win_wig is not None:
 
@@ -91,8 +87,19 @@ def extract_features(wave_dir, save_dir, save_file, file_inds=[], filter_wig=Fal
         #
             
 
-            
-        
+        ###########################
+        ## SCALE WIG ACCORDINGLY ##
+        ###########################
+
+        if scale_wig == True:
+            wig = ida.scale_wig(wig)
+        #
+
+        if range01_wig == True:
+            wig = ida.range01(wig)
+        #
+
+           
         ########################
         ### EXTRACT FEATURES ###
         ########################

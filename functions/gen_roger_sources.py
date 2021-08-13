@@ -9,17 +9,18 @@ import scipy
 import os
 
 
-project_dir = '/home/alex/projects/idac_projects/final_run/propagation_projects/0_degrees/'
-save_dir = project_dir + 'modeled_data/source_time_fxns/'
-data_dir = '/home/alex/projects/idac_projects/hrr/data/hrr_raw/hrr5_hrr6/'
-min_scale_dist=20
-max_scale_dist=50
-yields = {'HRR-1':18140, 'HRR-2':18140, 'HRR-3':9070, 'HRR-4':9070, 'HRR-5':45360, 'HRR-6':45270}
-f_min=0.1
-f_max=1
-source_length=100
+# project_dir = '/home/alex/projects/idac_projects/final_run/propagation_projects/0_degrees/'
+# save_dir = project_dir + 'modeled_data/source_time_fxns/'
+# data_dir = '/home/alex/projects/idac_projects/hrr/data/hrr_raw/hrr5_hrr6/'
+# min_scale_dist=20
+# max_scale_dist=50
+# yields = {'HRR-1':18140, 'HRR-2':18140, 'HRR-3':9070, 'HRR-4':9070, 'HRR-5':45360, 'HRR-6':45270}
+# f_min=0.1
+# f_max=1
+# source_length=100
  
-def gen_roger_sources(data_dir, save_dir, yields, f_min=0, f_max=10, min_scale_dist=20, max_scale_dist=50, source_length=100, sps_resample=40):
+##def gen_roger_sources(data_dir, save_dir, yields, f_min, f_max, min_scale_dist=20, max_scale_dist=50, source_length=100, sps_resample=40):
+def gen_roger_sources(data_dir, save_dir, yields, f_max, min_scale_dist=20, max_scale_dist=50, source_length=100, sps_resample=40):
 
     '''
     data_dir -- location of near source recorded data
@@ -78,7 +79,8 @@ def gen_roger_sources(data_dir, save_dir, yields, f_min=0, f_max=10, min_scale_d
         #################
 
         cur_trace.detrend(type='constant')
-        cur_trace.filter('bandpass', freqmin=f_min, freqmax=f_max, corners=4, zerophase=True)
+        ##cur_trace.filter('bandpass', freqmin=f_min, freqmax=f_max, corners=2, zerophase=True)
+        cur_trace.filter('lowpass', freq=f_max, corners=2, zerophase=True)
         cur_trace.taper(max_percentage=.01)
 
         

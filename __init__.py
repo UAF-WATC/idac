@@ -25,6 +25,7 @@ from idac.functions.fit_roger2data import fit_roger2data
 from idac.functions.gen_roger_sources import gen_roger_sources
 from idac.functions.scale_wig import scale_wig
 from idac.functions.center_wig import center_wig
+from idac.functions.get_continuous_cmap import get_continuous_cmap
 
 #############
 ## Classes ##

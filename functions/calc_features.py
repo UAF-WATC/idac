@@ -9,6 +9,9 @@ from obspy.signal.trigger import classic_sta_lta
 from obspy.signal.trigger import trigger_onset
 from scipy.stats import kurtosis
 from scipy.stats import skew
+from scipy import signal
+import idac as ida
+
 
 
 def calc_features(wig, sps):
@@ -111,10 +114,36 @@ def calc_features(wig, sps):
     fax = np.arange(len(wig)) * df
 
     ## magnitude
-    WIG = np.abs(np.fft.fft(wig))
+    WIG = np.abs(np.fft.fft(wig-np.mean(wig)))
+ 
+
+
+
+
+
+
+
+
+    import idac as ida
+    ##WIG = ida.range01(WIG)
+    
+
+
+    def moving_average(x, w):
+        return np.convolve(x, np.ones(w), 'same') / w
+
+    WIG = moving_average(WIG, 10)
+
+
+
+
+
+
+
+
 
     ## max frequency
-    fd_max = np.max(WIG[0:int(len(WIG)/2)]) / len(wig)
+    ##fd_max = np.max(WIG[0:int(len(WIG)/2)]) / len(wig)
 
     ## find the peak frequency below the nyquist...
     fd_peak_freq = fax[np.argmax(WIG[0:int(len(WIG)/2)])]
@@ -138,9 +167,12 @@ def calc_features(wig, sps):
     fd_75q = all_quarts[2]
     
 
-    ### QUICK FD PLOTTING ##
-    ##plt.plot(fax, WIG)
-    ##plt.xlim(0,sps/2)
+    # ### QUICK FD PLOTTING ##
+    # import matplotlib.pyplot as plt
+    # plt.plot(fax, ida.range01(WIG))
+    # plt.xlim(0,5)
+    # plt.ginput(1)
+    # plt.clf()
     
 
     ####################
@@ -148,8 +180,9 @@ def calc_features(wig, sps):
     ####################
 
     ##cur_features = [td_sd, td_mean, td_skew, td_kurt, pam, td_num_triggers, td_n_outliers, fd_max, fd_peak_freq, fd_mean, fd_sd, fd_skew, fd_kurt,fd_25q, fd_50q, fd_75q]
-    cur_features = [td_sd, td_mean, td_skew, td_kurt, pam, td_n_outliers, fd_max, fd_peak_freq, fd_mean, fd_sd, fd_skew, fd_kurt,fd_25q, fd_50q, fd_75q]
-    ##cur_features = [pam, td_n_outliers, fd_max, fd_peak_freq, fd_25q, fd_50q, fd_75q]
+    ##cur_features = [td_sd, td_mean, td_skew, td_kurt, pam, td_n_outliers, fd_max, fd_peak_freq, fd_mean, fd_sd, fd_skew, fd_kurt,fd_25q, fd_50q, fd_75q]
+    cur_features = [td_sd, td_mean, td_skew, td_kurt, pam, td_n_outliers, fd_peak_freq, fd_mean, fd_sd, fd_skew, fd_kurt,fd_25q, fd_50q, fd_75q]
+    
    
     return(cur_features)
 

@@ -12,6 +12,8 @@ from sklearn.model_selection import train_test_split
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
+import tensorflow as tf
+
 #from keras.models import load_model
 #from sklearn.metrics import accuracy_score
 
@@ -57,7 +59,7 @@ def train_vanilla_ann(labeled_features, num_epochs=5, norm_features=True):
 
     ## add each layer to the ANN (Dense = fully connected)
     model.add(Dense(features.shape[1], input_dim=features.shape[1], activation="relu"))
-
+    
 
 
     ##model.add(Dense(features.shape[1], activation="relu"))
@@ -66,8 +68,8 @@ def train_vanilla_ann(labeled_features, num_epochs=5, norm_features=True):
 
 
     
-    ##model.add(Dense(labels.shape[1], activation="softmax"))
-    model.add(Dense(labels.shape[1], activation="sigmoid"))
+    model.add(Dense(labels.shape[1], activation="softmax"))
+    ##model.add(Dense(labels.shape[1], activation="sigmoid"))
 
     ## specify the loss function and optimizer using compile functions
     ##model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
@@ -78,14 +80,14 @@ def train_vanilla_ann(labeled_features, num_epochs=5, norm_features=True):
     ### TRAIN THE ANN ###
     #####################
 
-    history = model.fit(features_train, labels_train,validation_data = (features_test,labels_test), epochs=num_epochs, batch_size=64)
+    history = model.fit(features_train, labels_train, validation_data = (features_test,labels_test), epochs=num_epochs, batch_size=64)
 
     ## return the model, scaling factors, and training history.
     if norm_features == True:
-        return([model, sc, history])
+        return([model, sc, history, (features_test,labels_test)])
     #
     if norm_features == False:
-        return([model, history])
+        return([model, history,(features_test,labels_test)])
     #
 #
 

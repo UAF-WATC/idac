@@ -36,7 +36,7 @@ def run_ida(input_path, gen_atms=False, gen_source_time_functions=False, gen_dis
 
     ## this generates files saved to a local directory
     if gen_source_time_functions == True:
-        ida.gen_roger_sources(data_dir = ns['hrr_data_dir'], save_dir=ns['source_time_fun_save_dir'], yields=ns['hrr_yields'], f_min=ns['roger_source_fmin'], f_max=ns['roger_source_fmax'], min_scale_dist=ns['roger_min_scale_dist'], max_scale_dist=ns['roger_max_scale_dist'], source_length=ns['roger_source_time'])
+        ida.gen_roger_sources(data_dir = ns['hrr_data_dir'], save_dir=ns['source_time_fun_save_dir'], yields=ns['hrr_yields'], f_max=ns['roger_source_fmax'], min_scale_dist=ns['roger_min_scale_dist'], max_scale_dist=ns['roger_max_scale_dist'], source_length=ns['roger_source_time'])
     #
     
     
