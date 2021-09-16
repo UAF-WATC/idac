@@ -26,6 +26,10 @@ from idac.functions.gen_roger_sources import gen_roger_sources
 from idac.functions.scale_wig import scale_wig
 from idac.functions.center_wig import center_wig
 from idac.functions.get_continuous_cmap import get_continuous_cmap
+from idac.functions.eval_ml_preds import eval_ml_preds
+from idac.functions.deploy_ann_hrr import deploy_ann_hrr
+from idac.functions.deploy_tcn_hrr import deploy_tcn_hrr
+
 
 #############
 ## Classes ##

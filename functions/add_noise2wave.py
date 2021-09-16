@@ -152,7 +152,7 @@ def add_noise2wave(rand_rec_dir, prop_dir, save_dir, snr_ratio=None):
         save_file = cur_prop_file[:-4] + '.mseed'
         save_path = save_dir + save_file
 
-        synth_event.write(save_path)
+        ##synth_event.write(save_path)
         ##synth_event.plot()
 
         i=i+1
