@@ -3,7 +3,8 @@
 ################################
 import matplotlib.pyplot as plt
 import numpy as np
-import geopandas
+#import geopandas ## this package is problematic
+# this class needs to be modified so as not to rely on geopandas
 
 class atmosphere:
     def __init__(self, data, metadata):
@@ -46,7 +47,7 @@ class atmosphere:
         ############################
 
         ## the world dataset
-        world = geopandas.read_file(geopandas.datasets.get_path('naturalearth_lowres'))
+        #world = geopandas.read_file(geopandas.datasets.get_path('naturalearth_lowres'))
         
 
         #################
