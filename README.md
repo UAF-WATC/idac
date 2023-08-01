@@ -23,6 +23,11 @@ The software [AVOG2S](https://github.com/usgs/volcano-avog2s) generates atmosphe
 
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 
+2b. add brew to your PATH:
+
+`echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bash_profile
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"`
+
 3.  tap the [Alaskan Volcano Observatories's (AVO) repository](https://github.com/ibrewster/homebrew-avo) (only needed once)
 
 `brew tap ibrewster/avo`
